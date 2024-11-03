@@ -73,7 +73,7 @@ const ProductDetails  = () => {
           data={product.imagesUrl}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
-            <Image source={{ uri: item as string }} style={styles.image} />
+            <Image source={{ uri: item .toString() }} style={styles.image} />
           )}
           horizontal
           showsHorizontalScrollIndicator={false}

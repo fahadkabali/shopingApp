@@ -4,6 +4,7 @@ import { useCartStore } from '../store/cart-store'
 import { StatusBar } from 'expo-status-bar'
 
 
+
 type CartItemType = {
   id: number;
   title: string;
