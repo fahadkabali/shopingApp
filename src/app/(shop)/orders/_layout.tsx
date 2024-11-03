@@ -1,7 +1,7 @@
 import {    Stack } from "expo-router";
 
 export default function OrderLayout() {
-    return 
+    return (
     <Stack>
         <Stack.Screen 
             name="index" 
@@ -11,4 +11,5 @@ export default function OrderLayout() {
                 }} 
             />
     </Stack>
+    )
 }

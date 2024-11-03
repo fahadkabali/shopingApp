@@ -10,10 +10,10 @@ import {
   import { CATEGORIES } from '../../../assets/categories';
   import { ProductListItem } from '../../components/product-list-item';
   import { ListHeader } from '../../components/list-header';
+  import Auth from '../auth';
 //   import { getProductsAndCategories } from '../../api/api';
   
   const Home = () => {
-  
   
     return (
       <View>
