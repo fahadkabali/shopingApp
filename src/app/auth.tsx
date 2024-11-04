@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import * as Z from 'zod'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 
@@ -14,20 +14,96 @@ const authSchema = Z.object({
   })
 })
 const Auth = () => {
-  const {} = useForm({
+
+  const {control, handleSubmit, formState} = useForm({
     resolver: zodResolver(authSchema),
     defaultValues: {
       email:'',
       password: ''
     },
   })
-  const signIn = (data:Zod.infer<typeof authSchema>) => {
+  const signIn = async (data:Zod.infer<typeof authSchema>) => {
+    console.log(data)
+  }
+  const signUp = async (data:Zod.infer<typeof authSchema>) => {
     console.log(data)
   }
   return (
-    <View>
-      <Text>auth</Text>
-    </View>
+    <ImageBackground
+      source={{
+        uri: 'https://images.pexels.com/photos/682933/pexels-photo-682933.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      }}
+      style={styles.backgroundImage}
+    >
+      <View style={styles.overlay} />
+
+      <View style={styles.container}>
+        <Text style={styles.title}>Welcome</Text>
+        <Text style={styles.subtitle}>Please Authenticate to continue</Text>
+
+        <Controller
+          control={control}
+          name='email'
+          render={({
+            field: { value, onChange, onBlur },
+            fieldState: { error },
+          }) => (
+            <>
+              <TextInput
+                placeholder='Email'
+                style={styles.input}
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                placeholderTextColor='#aaa'
+                autoCapitalize='none'
+                editable={!formState.isSubmitting}
+              />
+              {error && <Text style={styles.error}>{error.message}</Text>}
+            </>
+          )}
+        />
+
+        <Controller
+          control={control}
+          name='password'
+          render={({
+            field: { value, onChange, onBlur },
+            fieldState: { error },
+          }) => (
+            <>
+              <TextInput
+                placeholder='Password'
+                style={styles.input}
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                secureTextEntry
+                placeholderTextColor='#aaa'
+                autoCapitalize='none'
+                editable={!formState.isSubmitting}
+              />
+              {error && <Text style={styles.error}>{error.message}</Text>}
+            </>
+          )}
+        />
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleSubmit(signIn)}
+          disabled={formState.isSubmitting}
+        >
+          <Text style={styles.buttonText}>Sign In</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, styles.signUpButton]}
+          onPress={handleSubmit(signUp)}
+          disabled={formState.isSubmitting}
+        >
+          <Text style={styles.buttonText}>Sign Up</Text>
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
   )
 }
 
