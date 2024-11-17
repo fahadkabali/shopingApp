@@ -1,5 +1,5 @@
 import { Alert,Image, TouchableOpacity, FlatList, Platform, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import * as React from 'react';
 import { useCartStore } from '../store/cart-store'
 import { StatusBar } from 'expo-status-bar'
 

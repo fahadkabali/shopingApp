@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect, useRef, PropsWithChildren } from 'react';
 import * as Notifications from 'expo-notifications';
 import registerForPushNotificationsAsync from '../lib/notifications';

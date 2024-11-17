@@ -1,6 +1,7 @@
 import { Stack } from "expo-router";
 import { TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import * as React from 'react';
 
 export default function CategoriesLayout() {
     return (

@@ -1,7 +1,7 @@
 import { Redirect, Tabs } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {ActivityIndicator, StyleSheet, Text, View} from "react-native";
-import React from "react";
+import * as React from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import { useAuth } from "../../providers/auth-provider";
 
@@ -19,6 +19,7 @@ const TabsLayout = () => {
     if (!session) {
         return <Redirect href='/auth'/>;
     }
+  
     return (
        <SafeAreaView edges={['top']} style={styles.safeArea}>
          <Tabs
@@ -40,7 +41,7 @@ const TabsLayout = () => {
                 name="index" 
                 options={{
                     title: "Shop",
-                    tabBarIcon(props){
+                    tabBarIcon(props: React.JSX.IntrinsicAttributes & { name: React.ComponentProps<typeof FontAwesome>["name"]; color: string; }){
                         return <TabBarIcon {...props} name="shopping-cart" />
                     },
                     // headerShown: false,
@@ -48,7 +49,7 @@ const TabsLayout = () => {
             />
             <Tabs.Screen name="orders" options={{
                 title: "Orders",
-                tabBarIcon(props){
+                tabBarIcon(props: React.JSX.IntrinsicAttributes & { name: React.ComponentProps<typeof FontAwesome>["name"]; color: string; }){
                     return <TabBarIcon {...props} name="list" />
                 }
             }}/>       

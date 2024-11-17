@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Stack } from "expo-router";
 import { TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";

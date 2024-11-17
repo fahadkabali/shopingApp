@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Link } from 'expo-router';
 import {
   FlatList,
@@ -10,11 +11,14 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { CATEGORIES } from '../../assets/categories';
+import { supabase } from '../lib/supabase';
 
 
 
 export const ListHeader = ({}) => {
-  
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+  }
 
   return (
     <View style={[styles.headerContainer]}>
@@ -47,7 +51,7 @@ export const ListHeader = ({}) => {
               )}
             </Pressable>
           </Link>
-          <TouchableOpacity
+          <TouchableOpacity onPress={handleSignOut}
             style={styles.signOutButton}
           >
             <FontAwesome name='sign-out' size={25} color='red' />

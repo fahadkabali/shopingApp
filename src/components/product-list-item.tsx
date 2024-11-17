@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Link } from 'expo-router';

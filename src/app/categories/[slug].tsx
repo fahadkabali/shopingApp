@@ -1,4 +1,5 @@
-import {
+
+import * as React from 'react';import {
     ActivityIndicator,
     FlatList,
     Image,

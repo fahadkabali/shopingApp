@@ -1,9 +1,12 @@
 import { ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import * as React from 'react';
 import * as Z from 'zod'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Stack } from 'expo-router'
+import { Redirect, Stack } from 'expo-router'
+import { Toast } from 'react-native-toast-notifications'
+import { supabase } from '../lib/supabase'
+import { useAuth } from '../providers/auth-provider';
 
 
 const authSchema = Z.object({
@@ -15,7 +18,9 @@ const authSchema = Z.object({
   })
 })
 const Auth = () => {
+  const { session } = useAuth();
 
+  if (session) return <Redirect href='/' />;
   const {control, handleSubmit, formState} = useForm({
     resolver: zodResolver(authSchema),
     defaultValues: {
@@ -24,10 +29,28 @@ const Auth = () => {
     },
   })
   const signIn = async (data:Zod.infer<typeof authSchema>) => {
-    console.log(data)
+    const {error} = await supabase.auth.signInWithPassword(data);
+    if (error) {
+      alert(error.message)
+    }else{
+      Toast.show('Signed in successfully',{
+        type:'success',
+        placement: 'top',
+        duration: 4000,
+      });
+    }
   }
   const signUp = async (data:Zod.infer<typeof authSchema>) => {
-    console.log(data)
+    const {error} = await supabase.auth.signUp(data);
+    if (error) {
+      alert(error.message)
+    }else{
+      Toast.show('Signed up successfully',{
+        type:'success',
+        placement: 'top',
+        duration: 2000,
+      });
+    }
   }
   return (
     <ImageBackground
@@ -37,7 +60,6 @@ const Auth = () => {
       style={styles.backgroundImage}
     >
       <View style={styles.overlay} />
-      <Stack.Screen options={{ headerShown: false }} />
       <View style={styles.container}>
         <Text style={styles.title}>Welcome</Text>
         <Text style={styles.subtitle}>Please Authenticate to continue</Text>

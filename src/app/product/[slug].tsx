@@ -1,8 +1,8 @@
 import { FlatList,Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import * as React from 'react';
 import { Redirect, Stack, useLocalSearchParams } from 'expo-router';
 import { PRODUCTS } from '../../../assets/products';
-import { useToast } from 'react-native-toast-notifications';
+import { Toast, useToast } from 'react-native-toast-notifications';
 import { useCartStore } from '../../store/cart-store';
 
 const ProductDetails  = () => {
@@ -22,7 +22,7 @@ const ProductDetails  = () => {
             setQuantity(prev => prev + 1);
             incrementItem(product.id);
           } else {
-            toast.show('Cannot add more than maximum quantity', {
+            Toast.show('Cannot add more than maximum quantity', {
               type: 'warning',
               placement: 'top',
               duration: 1500,
