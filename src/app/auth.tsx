@@ -3,6 +3,7 @@ import React from 'react'
 import * as Z from 'zod'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Stack } from 'expo-router'
 
 
 const authSchema = Z.object({
@@ -36,7 +37,7 @@ const Auth = () => {
       style={styles.backgroundImage}
     >
       <View style={styles.overlay} />
-
+      <Stack.Screen options={{ headerShown: false }} />
       <View style={styles.container}>
         <Text style={styles.title}>Welcome</Text>
         <Text style={styles.subtitle}>Please Authenticate to continue</Text>
