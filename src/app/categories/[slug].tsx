@@ -10,26 +10,23 @@ import * as React from 'react';import {
   import { Redirect, Stack, useLocalSearchParams } from 'expo-router';
   
   import { ProductListItem } from '../../components/product-list-item';
-import { PRODUCTS } from '../../../assets/products';
-import { CATEGORIES } from '../../../assets/categories';
-//   import { getCategoryAndProducts } from '../../api/api';
+
+  import { getCategoryAndProducts } from '../../api/api';
   
   const Category = () => {
     const { slug } = useLocalSearchParams<{ slug: string }>();
   
-    // const { data, error, isLoading } = getCategoryAndProducts(slug);
+    const { data, error, isLoading } = getCategoryAndProducts(slug);
   
-    // if (isLoading) return <ActivityIndicator />;
-    // if (error || !data) return <Text>Error: {error?.message}</Text>;
-    // if (!data.category || !data.products) return <Redirect href='/404' />;
+    if (isLoading) return <ActivityIndicator />;
+    if (error || !data) return <Text>Error: {error?.message}</Text>;
+    if (!data.category || !data.products) return <Redirect href='/404' />;
   
-    // const { category, products } = data;
+    const { category, products } = data;
   
-    const category = CATEGORIES.find(
-      category => category.slug === slug);
+    
   
     if (!category) return <Redirect href='/404' />;
-    const products = PRODUCTS.filter(product => product.category.slug === slug);
   
     return (
       <View style={styles.container}>
