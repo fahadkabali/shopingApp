@@ -7,7 +7,6 @@ import {
     Text,
   } from 'react-native';
   
-  import { CATEGORIES } from '../../../assets/categories';
   import { ProductListItem } from '../../components/product-list-item';
   import { ListHeader } from '../../components/list-header';
   import { getProductsAndCategories } from '../../api/api';

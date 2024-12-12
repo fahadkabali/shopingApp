@@ -1,9 +1,18 @@
-import { Alert,Image, TouchableOpacity, FlatList, Platform, StyleSheet, Text, View } from 'react-native'
 import * as React from 'react';
-import { useCartStore } from '../store/cart-store'
-import { StatusBar } from 'expo-status-bar'
-
-
+import {
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  Platform,
+  TouchableOpacity,
+  FlatList,
+  Image,
+} from 'react-native';
+import { useCartStore } from '../store/cart-store';
+import { StatusBar } from 'expo-status-bar';
+import { createOrder, createOrderItem } from '../api/api';
+import { openStripeCheckout, setupStripePaymentSheet } from '../lib/stripe';
 
 type CartItemType = {
   id: number;
@@ -12,19 +21,21 @@ type CartItemType = {
   price: number;
   quantity: number;
   maxQuantity: number;
+};
 
-}
 type CartItemProps = {
   item: CartItemType;
-  onIncrement: (id:number) => void;
-  onDecrement: (id:number) => void;
-  onRemove: (id:number) => void;
-}
+  onRemove: (id: number) => void;
+  onIncrement: (id: number) => void;
+  onDecrement: (id: number) => void;
+};
+
 const CartItem = ({
-  item, 
-  onIncrement, 
-  onDecrement, 
-  onRemove}:CartItemProps) => {
+  item,
+  onDecrement,
+  onIncrement,
+  onRemove,
+}: CartItemProps) => {
   return (
     <View style={styles.cartItem}>
       <Image source={{ uri: item.heroImage }} style={styles.itemImage} />
@@ -55,43 +66,91 @@ const CartItem = ({
         <Text style={styles.removeButtonText}>Remove</Text>
       </TouchableOpacity>
     </View>
-  )
-}
-const cart = () => {
-  const {items, addItem, removeItem, incrementItem, decrementItem, getItemCount, getTotalPrice, resetCart} = useCartStore()
-  const handleCheckout = () => {
-    Alert.alert('Proceed to Checkout', `Total amount: $${getTotalPrice()}`)
-  }
+  );
+};
+
+export default function Cart() {
+  const {
+    items,
+    removeItem,
+    incrementItem,
+    decrementItem,
+    getTotalPrice,
+    resetCart,
+  } = useCartStore();
+
+  const { mutateAsync: createSupabaseOrder } = createOrder();
+  const { mutateAsync: createSupabaseOrderItem } = createOrderItem();
+
+  const handleCheckout = async () => {
+    const totalPrice = parseFloat(getTotalPrice());
+
+    try {
+      await setupStripePaymentSheet(Math.floor(totalPrice * 100));
+
+      const result = await openStripeCheckout();
+
+      if (!result) {
+        Alert.alert('An error occurred while processing the payment');
+        return;
+      }
+
+      await createSupabaseOrder(
+        { totalPrice },
+        {
+          onSuccess: data => {
+            createSupabaseOrderItem(
+              items.map(item => ({
+                orderId: data.id,
+                productId: item.id,
+                quantity: item.quantity,
+              })),
+              {
+                onSuccess: () => {
+                  alert('Order created successfully');
+                  resetCart();
+                },
+              }
+            );
+          },
+        }
+      );
+    } catch (error) {
+      console.error(error);
+      alert('An error occurred while creating the order');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+
       <FlatList
         data={items}
         keyExtractor={item => item.id.toString()}
         renderItem={({ item }) => (
-          <CartItem 
-          item={item}
-          onIncrement={incrementItem}
-          onDecrement={decrementItem}
-          onRemove={removeItem}
+          <CartItem
+            item={item}
+            onRemove={removeItem}
+            onIncrement={incrementItem}
+            onDecrement={decrementItem}
           />
         )}
         contentContainerStyle={styles.cartList}
-        />
-        <View style={styles.footer}>
-          <Text style={styles.totalText}>Total: ${getTotalPrice()}</Text>
-            <TouchableOpacity
-            onPress={handleCheckout}
-            style={styles.checkoutButton}
-          >
-            <Text style={styles.checkoutButtonText}>Checkout</Text>
-          </TouchableOpacity>
-        </View>
-    </View>
-  )
-}
+      />
 
-export default cart
+      <View style={styles.footer}>
+        <Text style={styles.totalText}>Total: ${getTotalPrice()}</Text>
+        <TouchableOpacity
+          onPress={handleCheckout}
+          style={styles.checkoutButton}
+        >
+          <Text style={styles.checkoutButtonText}>Checkout</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -182,4 +241,4 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-})
+});
