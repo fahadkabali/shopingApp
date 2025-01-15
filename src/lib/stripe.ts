@@ -1,6 +1,3 @@
-// 1 setup payment sheet
-// 2 Open stripe checkout form
-
 import {
   initPaymentSheet,
   presentPaymentSheet,
@@ -30,7 +27,7 @@ export const setupStripePaymentSheet = async (totalAmount: number) => {
   }
 
   await initPaymentSheet({
-    merchantDisplayName: 'Codewithlari',
+    merchantDisplayName: 'YourOnlineStore',
     paymentIntentClientSecret: paymentIntent,
     customerId: customer,
     customerEphemeralKeySecret: ephemeralKey,
