@@ -5,8 +5,8 @@ import * as aesjs from 'aes-js';
 import 'react-native-get-random-values';
 import { Database } from "../types/database.types";
 
-const supabaseUrl = process.env.YOUR_REACT_NATIVE_SUPABASE_URL!
-const supabaseAnonKey = process.env.YOUR_REACT_NATIVE_SUPABASE_ANON_KEY!
+const supabaseUrl = process.env.API_SUPABASE_URL!
+const supabaseAnonKey = process.env.API_SUPABASE_ANON_KEY!
 class LargeSecureStore {
   private async _encrypt(key: string, value: string) {
     const encryptionKey = crypto.getRandomValues(new Uint8Array(256 / 8));
